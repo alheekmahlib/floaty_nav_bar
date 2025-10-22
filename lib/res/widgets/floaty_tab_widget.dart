@@ -75,7 +75,7 @@ class FloatyTabWidget extends StatelessWidget {
                     ? const SizedBox.shrink()
                     : Padding(
                         padding: const EdgeInsetsDirectional.only(start: 6),
-                        child: Text(floatyTab.title, style: context.titleStyle),
+                        child: Text(floatyTab.title, style: floatyTab.titleStyle),
                       ),
               ),
             ),
