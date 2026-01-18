@@ -181,6 +181,7 @@ class FloatyTab {
     this.tooltip,
     this.glassEffect,
     this.width,
+    this.height,
   });
 
   /// Indicates whether the tab is currently selected.
@@ -302,6 +303,13 @@ class FloatyTab {
   /// If not provided, the tab will size to fit its content.
   final double? width;
 
+  /// Optional fixed height for the tab.
+  ///
+  /// If provided, the tab will have a fixed height and the content will be
+  /// wrapped in a FittedBox to prevent overflow.
+  /// If not provided, the tab will size to fit its content.
+  final double? height;
+
   /// Creates a copy of the current [FloatyTab] instance with optional modifications.
   ///
   /// This method allows you to create a new [FloatyTab] while preserving the current state,
@@ -336,6 +344,7 @@ class FloatyTab {
     String? tooltip,
     FloatyGlassEffect? glassEffect,
     double? width,
+    double? height,
   }) {
     return FloatyTab(
       isSelected: isSelected ?? this.isSelected,
@@ -366,6 +375,7 @@ class FloatyTab {
       tooltip: tooltip ?? this.tooltip,
       glassEffect: glassEffect ?? this.glassEffect,
       width: width ?? this.width,
+      height: height ?? this.height,
     );
   }
 }
