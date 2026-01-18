@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:floaty_nav_bar/res/models/floaty_action_button.dart';
 import 'package:floaty_nav_bar/res/models/floaty_shape.dart';
 import 'package:floaty_nav_bar/res/models/floaty_tab.dart';
@@ -35,6 +37,7 @@ class FloatyNavBar extends StatefulWidget {
     this.backgroundColor,
     this.boxShadow,
     this.shape = const CircleShape(),
+    this.glassEffect,
   });
 
   /// The list of tabs to be displayed in the navigation bar.
@@ -69,6 +72,12 @@ class FloatyNavBar extends StatefulWidget {
   ///
   /// You can create custom shapes by extending the [FloatyShape] class.
   final FloatyShape shape;
+
+  /// Glassmorphism effect configuration applied to all tabs.
+  ///
+  /// If provided, applies a glass-like blur effect to all tab backgrounds.
+  /// Individual tabs can override this with their own [glassEffect] property.
+  final FloatyGlassEffect? glassEffect;
 
   @override
   State<FloatyNavBar> createState() => _FloatyNavBarState();
@@ -108,22 +117,7 @@ class _FloatyNavBarState extends State<FloatyNavBar> {
           children: [
             MouseRegion(
               cursor: SystemMouseCursors.click,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: ShapeDecoration(
-                  color: widget.backgroundColor ?? context.surfaceColor,
-                  shape: widget.shape.shapeBorder,
-                  shadows: widget.boxShadow ?? [context.boxShadow],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: widget.tabs.map((tab) {
-                    return FloatyTabWidget(floatyTab: tab, shape: widget.shape);
-                  }).toList(),
-                ),
-              ),
+              child: _buildNavBarContainer(context),
             ),
             AnimatedSize(
               duration: context.fastDuration,
@@ -139,49 +133,207 @@ class _FloatyNavBarState extends State<FloatyNavBar> {
               child: SizedBox(
                 height: _floatyStyle?.size ?? 0,
                 width: _floatyStyle?.size ?? 0,
-                child: FloatingActionButton(
-                  shape: widget.shape.shapeBorder,
-                  backgroundColor:
-                      _floatyStyle?.backgroundColor ?? context.primaryColor,
-                  foregroundColor:
-                      _floatyStyle?.foregroundColor ?? context.onPrimaryColor,
-                  onPressed: _floatyStyle?.onTap,
-                  heroTag: _floatyStyle?.heroTag,
-                  autofocus: _floatyStyle?.autofocus ?? false,
-                  clipBehavior: _floatyStyle?.clipBehavior ?? Clip.none,
-                  enableFeedback: _floatyStyle?.enableFeedback ?? true,
-                  focusColor: _floatyStyle?.focusColor ?? context.primaryColor,
-                  hoverColor: _floatyStyle?.hoverColor ?? context.primaryColor,
-                  splashColor:
-                      _floatyStyle?.splashColor ?? context.primaryColor,
-                  tooltip: _floatyStyle?.tooltip,
-                  mini: _floatyStyle?.mini ?? false,
-                  focusNode: _floatyStyle?.focusNode,
-                  isExtended: _floatyStyle?.isExtended ?? false,
-                  key: ValueKey(_floatyStyle?.icon.hashCode),
-                  materialTapTargetSize: _floatyStyle?.materialTapTargetSize,
-                  mouseCursor: _floatyStyle?.mouseCursor,
-                  child: AnimatedSwitcher(
-                    duration: context.mediumDuration,
-                    transitionBuilder: (child, animation) {
-                      return ScaleTransition(
-                        scale: animation,
-                        child: FadeTransition(opacity: animation, child: child),
-                      );
-                    },
-                    child: _floatyStyle?.icon != null
-                        ? KeyedSubtree(
-                            key: ValueKey(_floatyStyle!.icon.hashCode),
-                            child: _floatyStyle!.icon,
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                ),
+                child: _buildFloatingActionButton(context),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  /// Builds the FloatingActionButton with optional glass effect.
+  Widget _buildFloatingActionButton(BuildContext context) {
+    if (_floatyStyle == null) return const SizedBox.shrink();
+
+    final fabContent = AnimatedSwitcher(
+      duration: context.mediumDuration,
+      transitionBuilder: (child, animation) {
+        return ScaleTransition(
+          scale: animation,
+          child: FadeTransition(opacity: animation, child: child),
+        );
+      },
+      child: _floatyStyle?.icon != null
+          ? KeyedSubtree(
+              key: ValueKey(_floatyStyle!.icon.hashCode),
+              child: _floatyStyle!.icon,
+            )
+          : const SizedBox.shrink(),
+    );
+
+    // Apply glass effect if configured
+    if (widget.glassEffect != null) {
+      final glassEffect = widget.glassEffect!;
+      final borderRadius = BorderRadius.circular(
+        widget.shape is CircleShape
+            ? (widget.shape as CircleShape).radius
+            : widget.shape is RectangleShape
+                ? (widget.shape as RectangleShape).radius
+                : (widget.shape as SquircleShape).radius,
+      );
+
+      return GestureDetector(
+        onTap: _floatyStyle?.onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: borderRadius,
+            boxShadow: glassEffect.enableShadow
+                ? [
+                    BoxShadow(
+                      color: glassEffect.shadowColor ??
+                          Colors.black.withValues(alpha: 0.25),
+                      blurRadius: glassEffect.shadowBlur * 0.5,
+                      spreadRadius: glassEffect.shadowSpread * 0.5,
+                    ),
+                  ]
+                : null,
+          ),
+          child: ClipRRect(
+            borderRadius: borderRadius,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: glassEffect.blur * 0.5,
+                sigmaY: glassEffect.blur * 0.5,
+              ),
+              child: Container(
+                width: _floatyStyle?.size ?? 56,
+                height: _floatyStyle?.size ?? 56,
+                decoration: BoxDecoration(
+                  gradient: glassEffect.gradient,
+                  color: glassEffect.gradient == null
+                      ? (_floatyStyle?.backgroundColor ?? context.primaryColor)
+                          .withValues(alpha: 0.3)
+                      : null,
+                  borderRadius: borderRadius,
+                  border: glassEffect.borderWidth > 0
+                      ? Border.all(
+                          color: glassEffect.borderColor ??
+                              Colors.white.withValues(alpha: 0.2),
+                          width: glassEffect.borderWidth,
+                        )
+                      : null,
+                ),
+                child: Center(
+                  child: IconTheme(
+                    data: IconThemeData(
+                      color: _floatyStyle?.foregroundColor ??
+                          context.onPrimaryColor,
+                    ),
+                    child: fabContent,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Default FloatingActionButton without glass effect
+    return FloatingActionButton(
+      shape: widget.shape.shapeBorder,
+      backgroundColor: _floatyStyle?.backgroundColor ?? context.primaryColor,
+      foregroundColor: _floatyStyle?.foregroundColor ?? context.onPrimaryColor,
+      onPressed: _floatyStyle?.onTap,
+      heroTag: _floatyStyle?.heroTag,
+      autofocus: _floatyStyle?.autofocus ?? false,
+      clipBehavior: _floatyStyle?.clipBehavior ?? Clip.none,
+      enableFeedback: _floatyStyle?.enableFeedback ?? true,
+      focusColor: _floatyStyle?.focusColor ?? context.primaryColor,
+      hoverColor: _floatyStyle?.hoverColor ?? context.primaryColor,
+      splashColor: _floatyStyle?.splashColor ?? context.primaryColor,
+      tooltip: _floatyStyle?.tooltip,
+      mini: _floatyStyle?.mini ?? false,
+      focusNode: _floatyStyle?.focusNode,
+      isExtended: _floatyStyle?.isExtended ?? false,
+      key: ValueKey(_floatyStyle?.icon.hashCode),
+      materialTapTargetSize: _floatyStyle?.materialTapTargetSize,
+      mouseCursor: _floatyStyle?.mouseCursor,
+      child: fabContent,
+    );
+  }
+
+  /// Builds the navigation bar container with optional glass effect.
+  Widget _buildNavBarContainer(BuildContext context) {
+    final tabsRow = Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: widget.tabs.map((tab) {
+        return FloatyTabWidget(
+          floatyTab: tab,
+          shape: widget.shape,
+          glassEffect: widget.glassEffect,
+        );
+      }).toList(),
+    );
+
+    // Apply glass effect if configured
+    if (widget.glassEffect != null) {
+      final glassEffect = widget.glassEffect!;
+      final borderRadius = BorderRadius.circular(
+        widget.shape is CircleShape
+            ? (widget.shape as CircleShape).radius
+            : widget.shape is RectangleShape
+                ? (widget.shape as RectangleShape).radius
+                : (widget.shape as SquircleShape).radius,
+      );
+
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          boxShadow: glassEffect.enableShadow
+              ? [
+                  BoxShadow(
+                    color: glassEffect.shadowColor ??
+                        Colors.black.withValues(alpha: 0.25),
+                    blurRadius: glassEffect.shadowBlur,
+                    spreadRadius: glassEffect.shadowSpread,
+                  ),
+                ]
+              : null,
+        ),
+        child: ClipRRect(
+          borderRadius: borderRadius,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: glassEffect.blur,
+              sigmaY: glassEffect.blur,
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                gradient: glassEffect.gradient,
+                color: glassEffect.gradient == null
+                    ? (glassEffect.tintColor ?? Colors.black)
+                        .withValues(alpha: glassEffect.opacity)
+                    : null,
+                borderRadius: borderRadius,
+                border: glassEffect.borderWidth > 0
+                    ? Border.all(
+                        color: glassEffect.borderColor ??
+                            Colors.white.withValues(alpha: 0.2),
+                        width: glassEffect.borderWidth,
+                      )
+                    : null,
+              ),
+              child: tabsRow,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Default container without glass effect
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: ShapeDecoration(
+        color: widget.backgroundColor ?? context.surfaceColor,
+        shape: widget.shape.shapeBorder,
+        shadows: widget.boxShadow ?? [context.boxShadow],
+      ),
+      child: tabsRow,
     );
   }
 }

@@ -21,14 +21,19 @@ abstract class FloatyShape {
 
 /// A circular shape for a floating action button or navigation bar.
 ///
-/// This shape creates a circular button with a border radius of 100, making it suitable
-/// for typical floating action button designs.
+/// This shape creates a circular button with a customizable border radius.
+/// The default radius is 100, making it suitable for pill-shaped designs.
 class CircleShape extends FloatyShape {
-  const CircleShape();
+  /// The radius used to round the corners.
+  ///
+  /// Defaults to 100 for a pill shape.
+  final double radius;
+
+  const CircleShape({this.radius = 100});
 
   @override
   ShapeBorder get shapeBorder => RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(radius),
       );
 }
 

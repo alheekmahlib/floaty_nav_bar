@@ -76,7 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(title: const Text('Floaty Nav Bar')),
+      backgroundColor: Colors.teal,
+      appBar: AppBar(
+          backgroundColor: Colors.teal, title: const Text('Floaty Nav Bar')),
       body: PageView(
         controller: _pageController,
         children: tabs,
@@ -84,14 +86,23 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       bottomNavigationBar: FloatyNavBar(
         selectedTab: selectedTab,
+        glassEffect: const FloatyGlassEffect.light(),
         tabs: [
           FloatyTab(
             isSelected: selectedTab == 0,
+            selectedDisplayMode: FloatyTabDisplayMode.titleOnly,
+            unselectedDisplayMode: FloatyTabDisplayMode.iconOnly,
+            selectedColor: Colors.white.withValues(alpha: 0.3),
+            unselectedColor: Colors.transparent,
+            titleStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
             onTap: () => changeTab(0),
             title: 'Home',
             icon: HugeIcon(
               icon: HugeIcons.strokeRoundedHome01,
-              color: selectedTab == 0 ? Colors.white : Colors.black,
+              color: selectedTab == 0 ? Colors.black87 : Colors.black87,
             ),
             floatyActionButton: FloatyActionButton(
               icon: const Icon(Icons.add),
@@ -100,15 +111,31 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           FloatyTab(
             isSelected: selectedTab == 1,
+            selectedDisplayMode: FloatyTabDisplayMode.titleOnly,
+            unselectedDisplayMode: FloatyTabDisplayMode.iconOnly,
+            selectedColor: Colors.white.withValues(alpha: 0.3),
+            unselectedColor: Colors.transparent,
+            titleStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
             onTap: () => changeTab(1),
             title: 'Search',
             icon: HugeIcon(
               icon: HugeIcons.strokeRoundedSearch01,
-              color: selectedTab == 1 ? Colors.white : Colors.black,
+              color: selectedTab == 1 ? Colors.white : Colors.black87,
             ),
           ),
           FloatyTab(
             isSelected: selectedTab == 2,
+            selectedDisplayMode: FloatyTabDisplayMode.titleOnly,
+            unselectedDisplayMode: FloatyTabDisplayMode.iconOnly,
+            selectedColor: Colors.white.withValues(alpha: 0.3),
+            unselectedColor: Colors.transparent,
+            titleStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
             onTap: () => changeTab(2),
             title: 'Watt',
             icon: SvgPicture.asset(
@@ -117,17 +144,24 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 24,
               colorFilter: selectedTab == 2
                   ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
-                  : null,
+                  : const ColorFilter.mode(Colors.black87, BlendMode.srcIn),
             ),
           ),
           FloatyTab(
             isSelected: selectedTab == 3,
+            selectedDisplayMode: FloatyTabDisplayMode.titleOnly,
+            unselectedDisplayMode: FloatyTabDisplayMode.iconOnly,
+            selectedColor: Colors.green.withValues(alpha: 0.8),
+            unselectedColor: Colors.transparent,
+            titleStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
             onTap: () => changeTab(3),
             title: 'Profile',
-            selectedColor: Colors.green,
             icon: HugeIcon(
               icon: HugeIcons.strokeRoundedProfile02,
-              color: selectedTab == 3 ? Colors.white : Colors.black,
+              color: selectedTab == 3 ? Colors.white : Colors.black87,
             ),
             floatyActionButton: FloatyActionButton(
               foregroundColor: Colors.white,
