@@ -379,29 +379,48 @@ class FloatyTabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final content = _buildContent(context);
+
+    // Wrap content with FittedBox if width is specified
+    final wrappedContent = floatyTab.width != null
+        ? FittedBox(
+            fit: BoxFit.scaleDown,
+            child: content,
+          )
+        : content;
+
     Widget tabContent = AnimatedContainer(
       duration: _getAnimationDuration(context),
       curve: _getAnimationCurve(),
+      width: floatyTab.width,
       padding: EdgeInsets.symmetric(
         horizontal: floatyTab.isSelected ? 14 : 18,
         vertical:
             floatyTab.labelPosition == FloatyLabelPosition.bottom ? 8 : 10,
       ),
       decoration: _buildDecoration(context),
-      child: _buildContent(context),
+      child: wrappedContent,
     );
 
     // Apply glass effect if configured
     if (_effectiveGlassEffect != null) {
+      final glassContent = floatyTab.width != null
+          ? FittedBox(
+              fit: BoxFit.scaleDown,
+              child: _buildContent(context),
+            )
+          : _buildContent(context);
+
       tabContent = _wrapWithGlassEffect(
         context,
-        Padding(
+        Container(
+          width: floatyTab.width,
           padding: EdgeInsets.symmetric(
             horizontal: floatyTab.isSelected ? 14 : 18,
             vertical:
                 floatyTab.labelPosition == FloatyLabelPosition.bottom ? 8 : 10,
           ),
-          child: _buildContent(context),
+          child: glassContent,
         ),
       );
     }

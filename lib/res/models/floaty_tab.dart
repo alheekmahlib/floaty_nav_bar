@@ -180,6 +180,7 @@ class FloatyTab {
     this.enableHaptics = false,
     this.tooltip,
     this.glassEffect,
+    this.width,
   });
 
   /// Indicates whether the tab is currently selected.
@@ -294,6 +295,13 @@ class FloatyTab {
   /// If provided, applies a glass-like blur effect to the tab background.
   final FloatyGlassEffect? glassEffect;
 
+  /// Optional fixed width for the tab.
+  ///
+  /// If provided, the tab will have a fixed width and the content will be
+  /// wrapped in a FittedBox to prevent overflow.
+  /// If not provided, the tab will size to fit its content.
+  final double? width;
+
   /// Creates a copy of the current [FloatyTab] instance with optional modifications.
   ///
   /// This method allows you to create a new [FloatyTab] while preserving the current state,
@@ -327,6 +335,7 @@ class FloatyTab {
     bool? enableHaptics,
     String? tooltip,
     FloatyGlassEffect? glassEffect,
+    double? width,
   }) {
     return FloatyTab(
       isSelected: isSelected ?? this.isSelected,
@@ -356,6 +365,7 @@ class FloatyTab {
       enableHaptics: enableHaptics ?? this.enableHaptics,
       tooltip: tooltip ?? this.tooltip,
       glassEffect: glassEffect ?? this.glassEffect,
+      width: width ?? this.width,
     );
   }
 }
