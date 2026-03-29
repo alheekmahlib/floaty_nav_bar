@@ -225,6 +225,9 @@ class _FloatyNavBarState extends State<FloatyNavBar>
     if (renderBox == null) return;
 
     final navBarTop = renderBox.localToGlobal(Offset.zero).dy;
+    final navBarLeft = renderBox.localToGlobal(Offset.zero).dx;
+    final navBarWidth = renderBox.size.width;
+    final navBarBottom = navBarTop + renderBox.size.height;
 
     // Transparent overlay just for tap-to-dismiss (no blur/color)
     _barrierOverlay = OverlayEntry(
@@ -232,6 +235,9 @@ class _FloatyNavBarState extends State<FloatyNavBar>
         animation: _menuController!,
         curve: menu.animationCurve ?? Curves.easeOutCubic,
         navBarTop: navBarTop,
+        navBarLeft: navBarLeft,
+        navBarWidth: navBarWidth,
+        navBarBottom: navBarBottom,
         menuHeight: _measuredMenuHeight,
         onTap: _closeMenu,
       ),
@@ -565,12 +571,15 @@ class _FloatyNavBarState extends State<FloatyNavBar>
 ///
 /// Contains no blur or color — visual effects are handled by the [Stack]
 /// overflow barrier inside [_FloatyNavBarState.build].
-/// Tapping anywhere outside the nav bar closes the menu.
+/// Tapping anywhere outside the nav bar / menu closes the menu.
 class _DismissOverlayWidget extends StatelessWidget {
   const _DismissOverlayWidget({
     required this.animation,
     required this.curve,
     required this.navBarTop,
+    required this.navBarLeft,
+    required this.navBarWidth,
+    required this.navBarBottom,
     required this.menuHeight,
     required this.onTap,
   });
@@ -578,6 +587,9 @@ class _DismissOverlayWidget extends StatelessWidget {
   final Animation<double> animation;
   final Curve curve;
   final double navBarTop;
+  final double navBarLeft;
+  final double navBarWidth;
+  final double navBarBottom;
   final double menuHeight;
   final VoidCallback onTap;
 
@@ -589,34 +601,59 @@ class _DismissOverlayWidget extends StatelessWidget {
         final value = curve.transform(animation.value);
         if (value == 0) return const SizedBox.shrink();
 
-        // Full-screen dismiss area above the expanded nav bar
-        final expandedNavBarTop = navBarTop - (menuHeight * value);
+        // The expanded nav bar area (menu + tabs) to exclude from dismiss
+        final expandedTop = navBarTop - (menuHeight * value);
+        final navBarRight = navBarLeft + navBarWidth;
 
         return Stack(
           children: [
-            // Area above the nav bar (including expanded menu)
-            if (expandedNavBarTop > 0)
+            // Top: above the expanded nav bar
+            if (expandedTop > 0)
               Positioned(
                 top: 0,
                 left: 0,
                 right: 0,
-                height: expandedNavBarTop,
+                height: expandedTop,
                 child: GestureDetector(
                   onTap: onTap,
                   behavior: HitTestBehavior.opaque,
                 ),
               ),
-            // Area beside/below the nav bar (left, right, below)
+            // Left: beside the nav bar
+            if (navBarLeft > 0)
+              Positioned(
+                top: expandedTop > 0 ? expandedTop : 0,
+                left: 0,
+                width: navBarLeft,
+                bottom: 0,
+                child: GestureDetector(
+                  onTap: onTap,
+                  behavior: HitTestBehavior.opaque,
+                ),
+              ),
+            // Right: beside the nav bar
             Positioned(
-              top: expandedNavBarTop > 0 ? expandedNavBarTop : 0,
-              left: 0,
+              top: expandedTop > 0 ? expandedTop : 0,
+              left: navBarRight,
               right: 0,
               bottom: 0,
               child: GestureDetector(
                 onTap: onTap,
-                behavior: HitTestBehavior.translucent,
+                behavior: HitTestBehavior.opaque,
               ),
             ),
+            // Bottom: below the nav bar
+            if (navBarBottom < MediaQuery.of(context).size.height)
+              Positioned(
+                top: navBarBottom,
+                left: navBarLeft,
+                width: navBarWidth,
+                bottom: 0,
+                child: GestureDetector(
+                  onTap: onTap,
+                  behavior: HitTestBehavior.opaque,
+                ),
+              ),
           ],
         );
       },
