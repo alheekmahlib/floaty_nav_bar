@@ -17,6 +17,11 @@ abstract class FloatyShape {
   ///
   /// Implement this in subclasses to return the shape-specific border configuration.
   ShapeBorder get shapeBorder;
+
+  /// The [BorderRadius] for this shape.
+  ///
+  /// Used internally to avoid repeated type-checking when applying effects.
+  BorderRadius get borderRadius;
 }
 
 /// A circular shape for a floating action button or navigation bar.
@@ -35,6 +40,9 @@ class CircleShape extends FloatyShape {
   ShapeBorder get shapeBorder => RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius),
       );
+
+  @override
+  BorderRadius get borderRadius => BorderRadius.circular(radius);
 }
 
 /// A rectangular shape for a floating action button or navigation bar.
@@ -54,6 +62,9 @@ class RectangleShape extends FloatyShape {
   ShapeBorder get shapeBorder => RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius),
       );
+
+  @override
+  BorderRadius get borderRadius => BorderRadius.circular(radius);
 }
 
 /// A squircle (superellipse) shape for a floating action button or navigation bar.
@@ -72,4 +83,7 @@ class SquircleShape extends FloatyShape {
   ShapeBorder get shapeBorder => ContinuousRectangleBorder(
         borderRadius: BorderRadius.circular(radius),
       );
+
+  @override
+  BorderRadius get borderRadius => BorderRadius.circular(radius);
 }

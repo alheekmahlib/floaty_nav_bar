@@ -1,8 +1,8 @@
-import 'dart:ui';
-
+import 'package:floaty_nav_bar/res/models/floaty_glass_effect.dart';
 import 'package:floaty_nav_bar/res/models/floaty_shape.dart';
 import 'package:floaty_nav_bar/res/models/floaty_tab.dart';
 import 'package:floaty_nav_bar/res/utils/context_extension.dart';
+import 'package:floaty_nav_bar/res/widgets/liquid_glass_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -149,32 +149,20 @@ class FloatyTabWidget extends StatelessWidget {
   /// Builds the shape border with optional border styling.
   ShapeBorder _buildShapeBorder(BuildContext context) {
     if (floatyTab.borderColor != null && floatyTab.borderWidth != null) {
-      // Create a bordered version of the shape
-      if (shape is CircleShape) {
-        return RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular((shape as CircleShape).radius),
-          side: BorderSide(
-            color: floatyTab.borderColor!,
-            width: floatyTab.borderWidth!,
-          ),
-        );
-      } else if (shape is RectangleShape) {
-        return RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular((shape as RectangleShape).radius),
-          side: BorderSide(
-            color: floatyTab.borderColor!,
-            width: floatyTab.borderWidth!,
-          ),
-        );
-      } else if (shape is SquircleShape) {
+      final side = BorderSide(
+        color: floatyTab.borderColor!,
+        width: floatyTab.borderWidth!,
+      );
+      if (shape is SquircleShape) {
         return ContinuousRectangleBorder(
-          borderRadius: BorderRadius.circular((shape as SquircleShape).radius),
-          side: BorderSide(
-            color: floatyTab.borderColor!,
-            width: floatyTab.borderWidth!,
-          ),
+          borderRadius: shape.borderRadius,
+          side: side,
         );
       }
+      return RoundedRectangleBorder(
+        borderRadius: shape.borderRadius,
+        side: side,
+      );
     }
     return shape.shapeBorder;
   }
@@ -296,8 +284,9 @@ class FloatyTabWidget extends StatelessWidget {
     if (floatyTab.labelPosition == FloatyLabelPosition.bottom) {
       return Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          iconWidget,
+          Expanded(child: iconWidget),
           titleWidget,
           indicator,
         ],
@@ -307,13 +296,16 @@ class FloatyTabWidget extends StatelessWidget {
     // Default: right position
     return Column(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            iconWidget,
-            titleWidget,
-          ],
+        Flexible(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              iconWidget,
+              titleWidget,
+            ],
+          ),
         ),
         indicator,
       ],
@@ -326,14 +318,7 @@ class FloatyTabWidget extends StatelessWidget {
 
     final glassEffect = _effectiveGlassEffect!;
     final isSelected = floatyTab.isSelected;
-
-    final borderRadius = BorderRadius.circular(
-      shape is CircleShape
-          ? (shape as CircleShape).radius
-          : shape is RectangleShape
-              ? (shape as RectangleShape).radius
-              : (shape as SquircleShape).radius,
-    );
+    final borderRadius = shape.borderRadius;
 
     // When not selected, show transparent background (no glass effect)
     if (!isSelected) {
@@ -346,34 +331,12 @@ class FloatyTabWidget extends StatelessWidget {
       );
     }
 
-    // When selected, apply glass effect with optional gradient
-    return ClipRRect(
+    // When selected, apply Liquid Glass effect
+    return LiquidGlassContainer(
+      glassEffect: glassEffect,
       borderRadius: borderRadius,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: glassEffect.blur * 0.5,
-          sigmaY: glassEffect.blur * 0.5,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: floatyTab.selectedGradient ?? glassEffect.gradient,
-            color: (floatyTab.selectedGradient == null &&
-                    glassEffect.gradient == null)
-                ? (floatyTab.selectedColor ?? context.primaryColor)
-                    .withValues(alpha: 0.3)
-                : null,
-            borderRadius: borderRadius,
-            border:
-                floatyTab.borderColor != null && floatyTab.borderWidth != null
-                    ? Border.all(
-                        color: floatyTab.borderColor!,
-                        width: floatyTab.borderWidth!,
-                      )
-                    : null,
-          ),
-          child: child,
-        ),
-      ),
+      blurScale: 0.5,
+      child: child,
     );
   }
 
@@ -398,7 +361,7 @@ class FloatyTabWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(
         horizontal: floatyTab.isSelected ? 14 : 18,
         vertical:
-            floatyTab.labelPosition == FloatyLabelPosition.bottom ? 8 : 10,
+            floatyTab.labelPosition == FloatyLabelPosition.bottom ? 2 : 10,
       ),
       decoration: _buildDecoration(context),
       child: wrappedContent,
@@ -421,7 +384,7 @@ class FloatyTabWidget extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: floatyTab.isSelected ? 14 : 18,
             vertical:
-                floatyTab.labelPosition == FloatyLabelPosition.bottom ? 8 : 10,
+                floatyTab.labelPosition == FloatyLabelPosition.bottom ? 2 : 10,
           ),
           child: glassContent,
         ),
@@ -436,11 +399,14 @@ class FloatyTabWidget extends StatelessWidget {
       );
     }
 
-    return CupertinoButton(
-      onPressed: _handleTap,
-      padding: EdgeInsets.zero,
-      focusColor: floatyTab.selectedColor ?? context.primaryColor,
-      child: tabContent,
+    return Padding(
+      padding: floatyTab.margin,
+      child: CupertinoButton(
+        onPressed: _handleTap,
+        padding: EdgeInsets.zero,
+        focusColor: floatyTab.selectedColor ?? context.primaryColor,
+        child: tabContent,
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:floaty_nav_bar/res/models/floaty_action_button.dart';
+import 'package:floaty_nav_bar/res/models/floaty_glass_effect.dart';
 import 'package:flutter/material.dart';
 
 /// Defines what content is displayed in a tab.
@@ -40,100 +41,6 @@ enum FloatyIndicatorStyle {
 
   /// No indicator, only icon/text color changes.
   none,
-}
-
-/// Configuration for glassmorphism effect.
-class FloatyGlassEffect {
-  /// Creates a glassmorphism effect configuration.
-  const FloatyGlassEffect({
-    this.blur = 10.0,
-    this.opacity = 0.2,
-    this.tintColor,
-    this.gradient,
-    this.borderColor,
-    this.borderWidth = 1.0,
-    this.enableShadow = true,
-    this.shadowColor,
-    this.shadowBlur = 10.0,
-    this.shadowSpread = 0.0,
-  });
-
-  /// Creates a dark glass effect preset with gradient.
-  const FloatyGlassEffect.dark({
-    this.blur = 20.0,
-    this.opacity = 0.3,
-    this.tintColor,
-    this.gradient = const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0x4D2A2A2A),
-        Color(0x661A1A1A),
-        Color(0x802A2A2A),
-      ],
-    ),
-    this.borderColor = const Color(0x33FFFFFF),
-    this.borderWidth = 0.5,
-    this.enableShadow = true,
-    this.shadowColor = const Color(0x40000000),
-    this.shadowBlur = 15.0,
-    this.shadowSpread = 2.0,
-  });
-
-  /// Creates a light glass effect preset with gradient.
-  const FloatyGlassEffect.light({
-    this.blur = 15.0,
-    this.opacity = 0.15,
-    this.tintColor,
-    this.gradient = const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-        Color(0x40FFFFFF),
-        Color(0x26FFFFFF),
-        Color(0x40FFFFFF),
-      ],
-    ),
-    this.borderColor = const Color(0x40FFFFFF),
-    this.borderWidth = 1.0,
-    this.enableShadow = true,
-    this.shadowColor = const Color(0x20000000),
-    this.shadowBlur = 10.0,
-    this.shadowSpread = 0.0,
-  });
-
-  /// The blur intensity for the glass effect.
-  final double blur;
-
-  /// The opacity of the glass overlay (0.0 to 1.0).
-  /// Only used when [gradient] is null.
-  final double opacity;
-
-  /// Optional tint color for the glass effect.
-  /// Only used when [gradient] is null.
-  final Color? tintColor;
-
-  /// Optional gradient for the glass effect.
-  /// Takes precedence over [tintColor] and [opacity].
-  final Gradient? gradient;
-
-  /// Optional border color for the glass effect.
-  final Color? borderColor;
-
-  /// Border width for the glass effect.
-  final double borderWidth;
-
-  /// Whether to enable shadow on the glass container.
-  final bool enableShadow;
-
-  /// Shadow color for the glass effect.
-  final Color? shadowColor;
-
-  /// Shadow blur radius.
-  final double shadowBlur;
-
-  /// Shadow spread radius.
-  final double shadowSpread;
 }
 
 /// A class that represents a tab in a floating navigation bar.
