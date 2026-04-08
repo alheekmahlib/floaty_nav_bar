@@ -1,7 +1,7 @@
-name: floaty_nav_bar
-description: "A Flutter package that provides a floating navigation bar that provide a custom floating button for each tab."
-version: 1.0.2
-homepage: https://github.com/Mustafa7Ibrahim/floaty_nav_bar
+name: floatica
+description: "A highly customizable floating navigation bar for Flutter with glassmorphism effects, expandable menus, per-tab floating action buttons, and iOS 26 Liquid Glass support. Zero external dependencies."
+version: 1.0.0
+homepage: https://github.com/alheekmahlib/floatica
 
 environment:
   sdk: ^3.5.3

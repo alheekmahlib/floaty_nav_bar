@@ -1,5 +1,5 @@
-import 'package:floaty_nav_bar/res/models/floaty_action_button.dart';
-import 'package:floaty_nav_bar/res/models/floaty_glass_effect.dart';
+import 'package:floatica/res/models/floatica_action_button.dart';
+import 'package:floatica/res/models/floatica_glass_effect.dart';
 import 'package:flutter/material.dart';
 
 /// Defines what content is displayed in a tab.
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 /// - [iconOnly]: Only the icon is shown.
 /// - [titleOnly]: Only the title is shown.
 /// - [iconAndTitle]: Both icon and title are shown.
-enum FloatyTabDisplayMode {
+enum FloaticaTabDisplayMode {
   /// Only the icon is displayed.
   iconOnly,
 
@@ -20,7 +20,7 @@ enum FloatyTabDisplayMode {
 }
 
 /// Defines the position of the label relative to the icon.
-enum FloatyLabelPosition {
+enum FloaticaLabelPosition {
   /// Label is positioned to the right of the icon (horizontal layout).
   right,
 
@@ -29,7 +29,7 @@ enum FloatyLabelPosition {
 }
 
 /// Defines the style of the selection indicator.
-enum FloatyIndicatorStyle {
+enum FloaticaIndicatorStyle {
   /// Background color fills the entire tab (default behavior).
   background,
 
@@ -45,10 +45,10 @@ enum FloatyIndicatorStyle {
 
 /// A class that represents a tab in a floating navigation bar.
 ///
-/// [FloatyTab] contains information about the tab's state, appearance, and actions.
+/// [FloaticaTab] contains information about the tab's state, appearance, and actions.
 /// Each tab can have an associated icon, title, and a floating action button for additional functionality.
-class FloatyTab {
-  /// Creates a [FloatyTab] instance with the specified properties.
+class FloaticaTab {
+  /// Creates a [FloaticaTab] instance with the specified properties.
   ///
   /// The [isSelected] parameter indicates whether the tab is currently selected.
   /// The [title] parameter sets the text displayed on the tab.
@@ -59,7 +59,7 @@ class FloatyTab {
   /// The [margin] parameter sets the margin around the tab, defaulting to 4 pixels on all sides.
   /// The [selectedColor] and [unselectedColor] parameters define the colors of the tab in selected
   /// and unselected states respectively.
-  const FloatyTab({
+  const FloaticaTab({
     required this.isSelected,
     required this.title,
     required this.onTap,
@@ -69,16 +69,16 @@ class FloatyTab {
     this.margin = const EdgeInsets.all(4),
     this.selectedColor,
     this.unselectedColor,
-    this.selectedDisplayMode = FloatyTabDisplayMode.iconAndTitle,
-    this.unselectedDisplayMode = FloatyTabDisplayMode.iconOnly,
+    this.selectedDisplayMode = FloaticaTabDisplayMode.iconAndTitle,
+    this.unselectedDisplayMode = FloaticaTabDisplayMode.iconOnly,
     // New modern features
     this.selectedGradient,
     this.unselectedGradient,
     this.badge,
     this.iconSize = 22.0,
     this.selectedIconSize = 24.0,
-    this.labelPosition = FloatyLabelPosition.right,
-    this.indicatorStyle = FloatyIndicatorStyle.background,
+    this.labelPosition = FloaticaLabelPosition.right,
+    this.indicatorStyle = FloaticaIndicatorStyle.background,
     this.indicatorColor,
     this.borderColor,
     this.borderWidth,
@@ -107,7 +107,7 @@ class FloatyTab {
   final VoidCallback onTap;
 
   /// An optional floating action button associated with the tab.
-  final FloatyActionButton? floatyActionButton;
+  final FloaticaActionButton? floatyActionButton;
 
   /// The margin around the tab, defaulting to 4 pixels on all sides.
   final EdgeInsetsGeometry margin;
@@ -121,14 +121,14 @@ class FloatyTab {
   /// The display mode when the tab is selected.
   ///
   /// Determines what is shown when the tab is selected (icon only, title only, or both).
-  /// Defaults to [FloatyTabDisplayMode.iconAndTitle].
-  final FloatyTabDisplayMode selectedDisplayMode;
+  /// Defaults to [FloaticaTabDisplayMode.iconAndTitle].
+  final FloaticaTabDisplayMode selectedDisplayMode;
 
   /// The display mode when the tab is not selected.
   ///
   /// Determines what is shown when the tab is not selected (icon only, title only, or both).
-  /// Defaults to [FloatyTabDisplayMode.iconOnly].
-  final FloatyTabDisplayMode unselectedDisplayMode;
+  /// Defaults to [FloaticaTabDisplayMode.iconOnly].
+  final FloaticaTabDisplayMode unselectedDisplayMode;
 
   /// Gradient background when the tab is selected.
   ///
@@ -157,13 +157,13 @@ class FloatyTab {
 
   /// The position of the label relative to the icon.
   ///
-  /// Defaults to [FloatyLabelPosition.right].
-  final FloatyLabelPosition labelPosition;
+  /// Defaults to [FloaticaLabelPosition.right].
+  final FloaticaLabelPosition labelPosition;
 
   /// The style of the selection indicator.
   ///
-  /// Defaults to [FloatyIndicatorStyle.background].
-  final FloatyIndicatorStyle indicatorStyle;
+  /// Defaults to [FloaticaIndicatorStyle.background].
+  final FloaticaIndicatorStyle indicatorStyle;
 
   /// Custom color for the indicator (dot, underline).
   ///
@@ -201,7 +201,7 @@ class FloatyTab {
   /// Glassmorphism effect configuration.
   ///
   /// If provided, applies a glass-like blur effect to the tab background.
-  final FloatyGlassEffect? glassEffect;
+  final FloaticaGlassEffect? glassEffect;
 
   /// Optional fixed width for the tab.
   ///
@@ -217,31 +217,31 @@ class FloatyTab {
   /// If not provided, the tab will size to fit its content.
   final double? height;
 
-  /// Creates a copy of the current [FloatyTab] instance with optional modifications.
+  /// Creates a copy of the current [FloaticaTab] instance with optional modifications.
   ///
-  /// This method allows you to create a new [FloatyTab] while preserving the current state,
+  /// This method allows you to create a new [FloaticaTab] while preserving the current state,
   /// and selectively updating properties such as [isSelected], [title], [titleStyle], [icon],
   /// [onTap], [floatyActionButton], [margin], [selectedColor], and [unselectedColor].
   /// If a property is not provided, the original value from the current instance will be used.
-  FloatyTab copyWith({
+  FloaticaTab copyWith({
     bool? isSelected,
     String? title,
     TextStyle? titleStyle,
     Widget? icon,
     VoidCallback? onTap,
-    FloatyActionButton? floatyActionButton,
+    FloaticaActionButton? floatyActionButton,
     EdgeInsetsGeometry? margin,
     Color? selectedColor,
     Color? unselectedColor,
-    FloatyTabDisplayMode? selectedDisplayMode,
-    FloatyTabDisplayMode? unselectedDisplayMode,
+    FloaticaTabDisplayMode? selectedDisplayMode,
+    FloaticaTabDisplayMode? unselectedDisplayMode,
     Gradient? selectedGradient,
     Gradient? unselectedGradient,
     Widget? badge,
     double? iconSize,
     double? selectedIconSize,
-    FloatyLabelPosition? labelPosition,
-    FloatyIndicatorStyle? indicatorStyle,
+    FloaticaLabelPosition? labelPosition,
+    FloaticaIndicatorStyle? indicatorStyle,
     Color? indicatorColor,
     Color? borderColor,
     double? borderWidth,
@@ -249,11 +249,11 @@ class FloatyTab {
     Curve? animationCurve,
     bool? enableHaptics,
     String? tooltip,
-    FloatyGlassEffect? glassEffect,
+    FloaticaGlassEffect? glassEffect,
     double? width,
     double? height,
   }) {
-    return FloatyTab(
+    return FloaticaTab(
       isSelected: isSelected ?? this.isSelected,
       title: title ?? this.title,
       titleStyle: titleStyle ?? this.titleStyle,

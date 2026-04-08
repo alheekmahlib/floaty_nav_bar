@@ -1,61 +1,60 @@
-import 'package:floaty_nav_bar/res/models/floaty_glass_effect.dart';
-import 'package:floaty_nav_bar/res/models/floaty_shape.dart';
-import 'package:floaty_nav_bar/res/models/floaty_tab.dart';
-import 'package:floaty_nav_bar/res/utils/context_extension.dart';
-import 'package:floaty_nav_bar/res/widgets/liquid_glass_container.dart';
+import 'package:floatica/res/models/floatica_glass_effect.dart';
+import 'package:floatica/res/models/floatica_tab.dart';
+import 'package:floatica/res/utils/context_extension.dart';
+import 'package:floatica/res/widgets/liquid_glass_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// A widget that represents a single tab in the floating navigation bar.
 ///
-/// The [FloatyTabWidget] displays an icon and a title, and visually indicates
+/// The [FloaticaTabWidget] displays an icon and a title, and visually indicates
 /// whether it is selected. The widget supports animations for smooth transitions
 /// between states.
-class FloatyTabWidget extends StatelessWidget {
-  /// Creates a [FloatyTabWidget].
+class FloaticaTabWidget extends StatelessWidget {
+  /// Creates a [FloaticaTabWidget].
   ///
-  /// The [floatyTab] parameter is required and provides the data for the tab,
+  /// The [floaticaTab] parameter is required and provides the data for the tab,
   /// including its icon, title, and selection state.
   ///
-  /// The [shape] parameter defines the shape of the tab's decoration and defaults to [CircleShape].
-  const FloatyTabWidget({
+  /// The [borderRadius] parameter defines the border radius of the tab's decoration.
+  const FloaticaTabWidget({
     super.key,
-    required this.floatyTab,
-    this.shape = const CircleShape(),
+    required this.floaticaTab,
+    this.borderRadius = const BorderRadius.all(Radius.circular(100)),
     this.glassEffect,
   });
 
   /// The data model for the tab, containing its properties.
-  final FloatyTab floatyTab;
+  final FloaticaTab floaticaTab;
 
-  /// The shape of the tab's decoration, which determines its visual appearance.
-  final FloatyShape shape;
+  /// The border radius of the tab's decoration.
+  final BorderRadius borderRadius;
 
   /// Glassmorphism effect from the parent FloatyNavBar.
   ///
   /// Individual tab's [glassEffect] takes precedence over this.
-  final FloatyGlassEffect? glassEffect;
+  final FloaticaGlassEffect? glassEffect;
 
   /// Gets the effective glass effect (tab-level overrides nav-bar level).
-  FloatyGlassEffect? get _effectiveGlassEffect {
-    return floatyTab.glassEffect ?? glassEffect;
+  FloaticaGlassEffect? get _effectiveGlassEffect {
+    return floaticaTab.glassEffect ?? glassEffect;
   }
 
   /// Gets the current display mode based on selection state.
-  FloatyTabDisplayMode get _currentDisplayMode {
-    return floatyTab.isSelected
-        ? floatyTab.selectedDisplayMode
-        : floatyTab.unselectedDisplayMode;
+  FloaticaTabDisplayMode get _currentDisplayMode {
+    return floaticaTab.isSelected
+        ? floaticaTab.selectedDisplayMode
+        : floaticaTab.unselectedDisplayMode;
   }
 
   /// Determines if the icon should be shown based on the current display mode.
   bool get _shouldShowIcon {
     switch (_currentDisplayMode) {
-      case FloatyTabDisplayMode.iconOnly:
-      case FloatyTabDisplayMode.iconAndTitle:
+      case FloaticaTabDisplayMode.iconOnly:
+      case FloaticaTabDisplayMode.iconAndTitle:
         return true;
-      case FloatyTabDisplayMode.titleOnly:
+      case FloaticaTabDisplayMode.titleOnly:
         return false;
     }
   }
@@ -63,10 +62,10 @@ class FloatyTabWidget extends StatelessWidget {
   /// Determines if the title should be shown based on the current display mode.
   bool get _shouldShowTitle {
     switch (_currentDisplayMode) {
-      case FloatyTabDisplayMode.iconOnly:
+      case FloaticaTabDisplayMode.iconOnly:
         return false;
-      case FloatyTabDisplayMode.titleOnly:
-      case FloatyTabDisplayMode.iconAndTitle:
+      case FloaticaTabDisplayMode.titleOnly:
+      case FloaticaTabDisplayMode.iconAndTitle:
         return true;
     }
   }
@@ -74,49 +73,49 @@ class FloatyTabWidget extends StatelessWidget {
   /// Determines the title opacity based on the current display mode.
   double get _titleOpacity {
     switch (_currentDisplayMode) {
-      case FloatyTabDisplayMode.iconOnly:
+      case FloaticaTabDisplayMode.iconOnly:
         return 0.0;
-      case FloatyTabDisplayMode.titleOnly:
-      case FloatyTabDisplayMode.iconAndTitle:
+      case FloaticaTabDisplayMode.titleOnly:
+      case FloaticaTabDisplayMode.iconAndTitle:
         return 1.0;
     }
   }
 
   /// Gets the animation duration (custom or default).
   Duration _getAnimationDuration(BuildContext context) {
-    return floatyTab.animationDuration ?? context.mediumDuration;
+    return floaticaTab.animationDuration ?? context.mediumDuration;
   }
 
   /// Gets the animation curve (custom or default).
   Curve _getAnimationCurve() {
-    return floatyTab.animationCurve ?? Curves.easeInOut;
+    return floaticaTab.animationCurve ?? Curves.easeInOut;
   }
 
   /// Gets the current icon size based on selection state.
   double get _currentIconSize {
-    return floatyTab.isSelected
-        ? floatyTab.selectedIconSize
-        : floatyTab.iconSize;
+    return floaticaTab.isSelected
+        ? floaticaTab.selectedIconSize
+        : floaticaTab.iconSize;
   }
 
   /// Handles the tap with optional haptic feedback.
   void _handleTap() {
-    if (floatyTab.enableHaptics) {
+    if (floaticaTab.enableHaptics) {
       HapticFeedback.lightImpact();
     }
-    floatyTab.onTap();
+    floaticaTab.onTap();
   }
 
   /// Builds the decoration based on indicator style and glass effect.
   Decoration? _buildDecoration(BuildContext context) {
-    final isSelected = floatyTab.isSelected;
-    final indicatorStyle = floatyTab.indicatorStyle;
+    final isSelected = floaticaTab.isSelected;
+    final indicatorStyle = floaticaTab.indicatorStyle;
 
     // For non-background indicator styles, don't fill the background when selected
-    if (indicatorStyle != FloatyIndicatorStyle.background &&
-        indicatorStyle != FloatyIndicatorStyle.none) {
+    if (indicatorStyle != FloaticaIndicatorStyle.background &&
+        indicatorStyle != FloaticaIndicatorStyle.none) {
       return ShapeDecoration(
-        color: floatyTab.unselectedColor ?? context.surfaceColor,
+        color: floaticaTab.unselectedColor ?? context.surfaceColor,
         shape: _buildShapeBorder(context),
       );
     }
@@ -127,8 +126,9 @@ class FloatyTabWidget extends StatelessWidget {
     }
 
     // Gradient takes precedence over solid color
-    final gradient =
-        isSelected ? floatyTab.selectedGradient : floatyTab.unselectedGradient;
+    final gradient = isSelected
+        ? floaticaTab.selectedGradient
+        : floaticaTab.unselectedGradient;
 
     if (gradient != null) {
       return ShapeDecoration(
@@ -140,31 +140,25 @@ class FloatyTabWidget extends StatelessWidget {
     // Default solid color
     return ShapeDecoration(
       color: isSelected
-          ? floatyTab.selectedColor ?? context.primaryColor
-          : floatyTab.unselectedColor ?? context.surfaceColor,
+          ? floaticaTab.selectedColor ?? context.primaryColor
+          : floaticaTab.unselectedColor ?? context.surfaceColor,
       shape: _buildShapeBorder(context),
     );
   }
 
   /// Builds the shape border with optional border styling.
   ShapeBorder _buildShapeBorder(BuildContext context) {
-    if (floatyTab.borderColor != null && floatyTab.borderWidth != null) {
+    if (floaticaTab.borderColor != null && floaticaTab.borderWidth != null) {
       final side = BorderSide(
-        color: floatyTab.borderColor!,
-        width: floatyTab.borderWidth!,
+        color: floaticaTab.borderColor!,
+        width: floaticaTab.borderWidth!,
       );
-      if (shape is SquircleShape) {
-        return ContinuousRectangleBorder(
-          borderRadius: shape.borderRadius,
-          side: side,
-        );
-      }
       return RoundedRectangleBorder(
-        borderRadius: shape.borderRadius,
+        borderRadius: borderRadius,
         side: side,
       );
     }
-    return shape.shapeBorder;
+    return RoundedRectangleBorder(borderRadius: borderRadius);
   }
 
   /// Builds the icon widget with badge support.
@@ -173,16 +167,16 @@ class FloatyTabWidget extends StatelessWidget {
       data: Theme.of(context).copyWith(
         iconTheme: IconThemeData(
           size: _currentIconSize,
-          color: floatyTab.isSelected
+          color: floaticaTab.isSelected
               ? context.onPrimaryColor
               : context.onSurfaceColor,
         ),
       ),
-      child: floatyTab.icon,
+      child: floaticaTab.icon,
     );
 
     // Add badge if provided
-    if (floatyTab.badge != null) {
+    if (floaticaTab.badge != null) {
       return Stack(
         clipBehavior: Clip.none,
         children: [
@@ -190,7 +184,7 @@ class FloatyTabWidget extends StatelessWidget {
           Positioned(
             right: -4,
             top: -4,
-            child: floatyTab.badge!,
+            child: floaticaTab.badge!,
           ),
         ],
       );
@@ -201,51 +195,56 @@ class FloatyTabWidget extends StatelessWidget {
 
   /// Builds the title widget.
   Widget _buildTitleWidget(BuildContext context) {
-    return Text(
-      floatyTab.title,
-      style: floatyTab.titleStyle ??
-          TextStyle(
-            color: floatyTab.isSelected
-                ? context.onPrimaryColor
-                : context.onSurfaceColor,
-            fontWeight: FontWeight.w500,
-          ),
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        floaticaTab.title,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: floaticaTab.titleStyle ??
+            TextStyle(
+              color: floaticaTab.isSelected
+                  ? context.onPrimaryColor
+                  : context.onSurfaceColor,
+              fontWeight: FontWeight.w500,
+            ),
+      ),
     );
   }
 
   /// Builds the indicator widget (dot or underline).
   Widget _buildIndicator(BuildContext context) {
-    final indicatorColor = floatyTab.indicatorColor ??
-        floatyTab.selectedColor ??
+    final indicatorColor = floaticaTab.indicatorColor ??
+        floaticaTab.selectedColor ??
         context.primaryColor;
 
-    switch (floatyTab.indicatorStyle) {
-      case FloatyIndicatorStyle.dot:
+    switch (floaticaTab.indicatorStyle) {
+      case FloaticaIndicatorStyle.dot:
         return AnimatedContainer(
           duration: _getAnimationDuration(context),
           curve: _getAnimationCurve(),
           margin: const EdgeInsets.only(top: 4),
-          width: floatyTab.isSelected ? 6 : 0,
-          height: floatyTab.isSelected ? 6 : 0,
+          width: floaticaTab.isSelected ? 6 : 0,
+          height: floaticaTab.isSelected ? 6 : 0,
           decoration: BoxDecoration(
             color: indicatorColor,
             shape: BoxShape.circle,
           ),
         );
-      case FloatyIndicatorStyle.underline:
+      case FloaticaIndicatorStyle.underline:
         return AnimatedContainer(
           duration: _getAnimationDuration(context),
           curve: _getAnimationCurve(),
           margin: const EdgeInsets.only(top: 4),
-          width: floatyTab.isSelected ? 20 : 0,
+          width: floaticaTab.isSelected ? 20 : 0,
           height: 3,
           decoration: BoxDecoration(
             color: indicatorColor,
             borderRadius: BorderRadius.circular(2),
           ),
         );
-      case FloatyIndicatorStyle.background:
-      case FloatyIndicatorStyle.none:
+      case FloaticaIndicatorStyle.background:
+      case FloaticaIndicatorStyle.none:
         return const SizedBox.shrink();
     }
   }
@@ -271,7 +270,8 @@ class FloatyTabWidget extends StatelessWidget {
         child: !_shouldShowTitle
             ? const SizedBox.shrink()
             : Padding(
-                padding: floatyTab.labelPosition == FloatyLabelPosition.right
+                padding: floaticaTab.labelPosition ==
+                        FloaticaLabelPosition.right
                     ? EdgeInsetsDirectional.only(start: _shouldShowIcon ? 6 : 0)
                     : const EdgeInsets.only(top: 4),
                 child: _buildTitleWidget(context),
@@ -281,7 +281,7 @@ class FloatyTabWidget extends StatelessWidget {
 
     final indicator = _buildIndicator(context);
 
-    if (floatyTab.labelPosition == FloatyLabelPosition.bottom) {
+    if (floaticaTab.labelPosition == FloaticaLabelPosition.bottom) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -317,14 +317,13 @@ class FloatyTabWidget extends StatelessWidget {
     if (_effectiveGlassEffect == null) return child;
 
     final glassEffect = _effectiveGlassEffect!;
-    final isSelected = floatyTab.isSelected;
-    final borderRadius = shape.borderRadius;
+    final isSelected = floaticaTab.isSelected;
 
     // When not selected, show transparent background (no glass effect)
     if (!isSelected) {
       return Container(
         decoration: BoxDecoration(
-          color: floatyTab.unselectedColor ?? Colors.transparent,
+          color: floaticaTab.unselectedColor ?? Colors.transparent,
           borderRadius: borderRadius,
         ),
         child: child,
@@ -345,7 +344,8 @@ class FloatyTabWidget extends StatelessWidget {
     final content = _buildContent(context);
 
     // Wrap content with FittedBox if width or height is specified
-    final hasFixedSize = floatyTab.width != null || floatyTab.height != null;
+    final hasFixedSize =
+        floaticaTab.width != null || floaticaTab.height != null;
     final wrappedContent = hasFixedSize
         ? FittedBox(
             fit: BoxFit.scaleDown,
@@ -356,12 +356,12 @@ class FloatyTabWidget extends StatelessWidget {
     Widget tabContent = AnimatedContainer(
       duration: _getAnimationDuration(context),
       curve: _getAnimationCurve(),
-      width: floatyTab.width,
-      height: floatyTab.height,
+      width: floaticaTab.width,
+      height: floaticaTab.height,
       padding: EdgeInsets.symmetric(
-        horizontal: floatyTab.isSelected ? 14 : 18,
+        horizontal: floaticaTab.isSelected ? 14 : 18,
         vertical:
-            floatyTab.labelPosition == FloatyLabelPosition.bottom ? 2 : 10,
+            floaticaTab.labelPosition == FloaticaLabelPosition.bottom ? 2 : 10,
       ),
       decoration: _buildDecoration(context),
       child: wrappedContent,
@@ -379,12 +379,13 @@ class FloatyTabWidget extends StatelessWidget {
       tabContent = _wrapWithGlassEffect(
         context,
         Container(
-          width: floatyTab.width,
-          height: floatyTab.height,
+          width: floaticaTab.width,
+          height: floaticaTab.height,
           padding: EdgeInsets.symmetric(
-            horizontal: floatyTab.isSelected ? 14 : 18,
-            vertical:
-                floatyTab.labelPosition == FloatyLabelPosition.bottom ? 2 : 10,
+            horizontal: floaticaTab.isSelected ? 14 : 18,
+            vertical: floaticaTab.labelPosition == FloaticaLabelPosition.bottom
+                ? 2
+                : 10,
           ),
           child: glassContent,
         ),
@@ -392,19 +393,19 @@ class FloatyTabWidget extends StatelessWidget {
     }
 
     // Wrap with tooltip if provided
-    if (floatyTab.tooltip != null) {
+    if (floaticaTab.tooltip != null) {
       tabContent = Tooltip(
-        message: floatyTab.tooltip!,
+        message: floaticaTab.tooltip!,
         child: tabContent,
       );
     }
 
     return Padding(
-      padding: floatyTab.margin,
+      padding: floaticaTab.margin,
       child: CupertinoButton(
         onPressed: _handleTap,
         padding: EdgeInsets.zero,
-        focusColor: floatyTab.selectedColor ?? context.primaryColor,
+        focusColor: floaticaTab.selectedColor ?? context.primaryColor,
         child: tabContent,
       ),
     );

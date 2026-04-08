@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'package:floaty_nav_bar/res/models/floaty_glass_effect.dart';
+import 'package:floatica/res/models/floatica_glass_effect.dart';
 import 'package:flutter/material.dart';
 
 /// A reusable container that renders an iOS 26–style Liquid Glass effect.
@@ -25,7 +25,7 @@ class LiquidGlassContainer extends StatelessWidget {
   });
 
   /// The glass effect configuration.
-  final FloatyGlassEffect glassEffect;
+  final FloaticaGlassEffect glassEffect;
 
   /// The border radius for clipping and decoration.
   final BorderRadius borderRadius;
@@ -102,7 +102,7 @@ class _LiquidGlassPainter extends CustomPainter {
     required this.borderRadius,
   });
 
-  final FloatyGlassEffect glassEffect;
+  final FloaticaGlassEffect glassEffect;
   final BorderRadius borderRadius;
 
   @override

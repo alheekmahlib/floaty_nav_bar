@@ -1,15 +1,14 @@
 import 'dart:ui';
 
-import 'package:floaty_nav_bar/res/models/floaty_action_button.dart';
-import 'package:floaty_nav_bar/res/models/floaty_glass_effect.dart';
-import 'package:floaty_nav_bar/res/models/floaty_menu.dart';
-import 'package:floaty_nav_bar/res/models/floaty_menu_controller.dart';
-import 'package:floaty_nav_bar/res/models/floaty_shape.dart';
-import 'package:floaty_nav_bar/res/models/floaty_tab.dart';
-import 'package:floaty_nav_bar/res/utils/context_extension.dart';
-import 'package:floaty_nav_bar/res/widgets/floaty_tab_widget.dart';
-import 'package:floaty_nav_bar/res/widgets/gap_box.dart';
-import 'package:floaty_nav_bar/res/widgets/liquid_glass_container.dart';
+import 'package:floatica/res/models/floatica_action_button.dart';
+import 'package:floatica/res/models/floatica_glass_effect.dart';
+import 'package:floatica/res/models/floatica_menu.dart';
+import 'package:floatica/res/models/floatica_menu_controller.dart';
+import 'package:floatica/res/models/floatica_tab.dart';
+import 'package:floatica/res/utils/context_extension.dart';
+import 'package:floatica/res/widgets/floatica_tab_widget.dart';
+import 'package:floatica/res/widgets/gap_box.dart';
+import 'package:floatica/res/widgets/liquid_glass_container.dart';
 import 'package:flutter/material.dart';
 
 /// A customizable floating navigation bar that displays tabs and an action button.
@@ -30,7 +29,7 @@ class FloatyNavBar extends StatefulWidget {
   /// - [gap]: The gap between the tab bar and the action button. Defaults to 16.
   /// - [backgroundColor]: The background color of the navigation bar.
   /// - [boxShadow]: The shadow effect applied to the navigation bar.
-  /// - [shape]: The shape of the navigation bar. Defaults to [CircleShape].
+  /// - [borderRadius]: The border radius of the navigation bar.
   const FloatyNavBar({
     super.key,
     required this.tabs,
@@ -40,13 +39,13 @@ class FloatyNavBar extends StatefulWidget {
     this.gap = 16,
     this.backgroundColor,
     this.boxShadow,
-    this.shape = const CircleShape(),
+    this.borderRadius = const BorderRadius.all(Radius.circular(100)),
     this.glassEffect,
     this.menu,
   });
 
   /// The list of tabs to be displayed in the navigation bar.
-  final List<FloatyTab> tabs;
+  final List<FloaticaTab> tabs;
 
   /// The index of the currently selected tab.
   final int selectedTab;
@@ -66,30 +65,23 @@ class FloatyNavBar extends StatefulWidget {
   /// The shadow effect applied to the navigation bar.
   final List<BoxShadow>? boxShadow;
 
-  /// The shape of the navigation bar.
+  /// The border radius of the navigation bar.
   ///
-  /// The default shape is [CircleShape].
-  ///
-  /// Subclasses include:
-  /// - [CircleShape]: A circular shape with rounded corners.
-  /// - [RectangleShape]: A rectangular shape with customizable corner radius.
-  /// - [SquircleShape]: A squircle shape with a continuous curve for the border.
-  ///
-  /// You can create custom shapes by extending the [FloatyShape] class.
-  final FloatyShape shape;
+  /// Defaults to `BorderRadius.all(Radius.circular(100))` for a pill shape.
+  final BorderRadius borderRadius;
 
   /// Glassmorphism effect configuration applied to all tabs.
   ///
   /// If provided, applies a glass-like blur effect to all tab backgrounds.
   /// Individual tabs can override this with their own [glassEffect] property.
-  final FloatyGlassEffect? glassEffect;
+  final FloaticaGlassEffect? glassEffect;
 
   /// An optional expandable menu that renders as a tab in the navigation bar.
   ///
   /// When tapped, it opens an animated popup overlay containing a grid of
   /// [FloatyMenuItem]s. The menu auto-closes on tab change, outside tap,
   /// or item tap.
-  final FloatyMenu? menu;
+  final FloaticaMenu? menu;
 
   @override
   State<FloatyNavBar> createState() => _FloatyNavBarState();
@@ -97,7 +89,7 @@ class FloatyNavBar extends StatefulWidget {
 
 class _FloatyNavBarState extends State<FloatyNavBar>
     with SingleTickerProviderStateMixin {
-  late FloatyActionButton? _floatyStyle;
+  late FloaticaActionButton? _floatyStyle;
 
   // Menu state
   bool _isMenuOpen = false;
@@ -110,6 +102,10 @@ class _FloatyNavBarState extends State<FloatyNavBar>
   @override
   void initState() {
     super.initState();
+    assert(
+      widget.selectedTab >= 0 && widget.selectedTab < widget.tabs.length,
+      'selectedTab (${widget.selectedTab}) must be a valid index in tabs (length ${widget.tabs.length})',
+    );
     _floatyStyle = widget.tabs[widget.selectedTab].floatyActionButton;
     _initMenuController();
     _attachMenuController();
@@ -168,12 +164,12 @@ class _FloatyNavBarState extends State<FloatyNavBar>
     }
   }
 
-  void _attachMenuController([FloatyMenuController? controller]) {
+  void _attachMenuController([FloaticaMenuController? controller]) {
     final ctrl = controller ?? widget.menu?.controller;
     ctrl?.addListener(_onMenuControllerAction);
   }
 
-  void _detachMenuController([FloatyMenuController? controller]) {
+  void _detachMenuController([FloaticaMenuController? controller]) {
     final ctrl = controller ?? widget.menu?.controller;
     ctrl?.removeListener(_onMenuControllerAction);
   }
@@ -184,11 +180,11 @@ class _FloatyNavBarState extends State<FloatyNavBar>
     final action = ctrl.consumeAction();
     if (action == null) return;
     switch (action) {
-      case FloatyMenuAction.open:
+      case FloaticaMenuAction.open:
         _openMenu();
-      case FloatyMenuAction.close:
+      case FloaticaMenuAction.close:
         _closeMenu();
-      case FloatyMenuAction.toggle:
+      case FloaticaMenuAction.toggle:
         _toggleMenu();
     }
   }
@@ -283,11 +279,13 @@ class _FloatyNavBarState extends State<FloatyNavBar>
           curve: Curves.easeInOut,
           alignment: Alignment.center,
           clipBehavior: Clip.none,
-          child: SizedBox(
-            height: _floatyStyle?.size ?? 0,
-            width: _floatyStyle?.size ?? 0,
-            child: _buildFloatingActionButton(context),
-          ),
+          child: _floatyStyle == null
+              ? const SizedBox.shrink()
+              : SizedBox(
+                  height: _floatyStyle!.size ?? 56,
+                  width: _floatyStyle!.size ?? 56,
+                  child: _buildFloatingActionButton(context),
+                ),
         ),
       ],
     );
@@ -378,7 +376,7 @@ class _FloatyNavBarState extends State<FloatyNavBar>
     // Apply glass effect if configured
     if (widget.glassEffect != null) {
       final glassEffect = widget.glassEffect!;
-      final borderRadius = widget.shape.borderRadius;
+      final borderRadius = widget.borderRadius;
 
       return GestureDetector(
         onTap: _floatyStyle?.onTap,
@@ -404,79 +402,56 @@ class _FloatyNavBarState extends State<FloatyNavBar>
     }
 
     // Default FloatingActionButton without glass effect
-    return FloatingActionButton(
-      shape: widget.shape.shapeBorder,
-      backgroundColor: _floatyStyle?.backgroundColor ?? context.primaryColor,
-      foregroundColor: _floatyStyle?.foregroundColor ?? context.onPrimaryColor,
-      onPressed: _floatyStyle?.onTap,
-      heroTag: _floatyStyle?.heroTag,
-      autofocus: _floatyStyle?.autofocus ?? false,
-      clipBehavior: _floatyStyle?.clipBehavior ?? Clip.none,
-      enableFeedback: _floatyStyle?.enableFeedback ?? true,
-      focusColor: _floatyStyle?.focusColor ?? context.primaryColor,
-      hoverColor: _floatyStyle?.hoverColor ?? context.primaryColor,
-      splashColor: _floatyStyle?.splashColor ?? context.primaryColor,
-      tooltip: _floatyStyle?.tooltip,
-      mini: _floatyStyle?.mini ?? false,
-      focusNode: _floatyStyle?.focusNode,
-      isExtended: _floatyStyle?.isExtended ?? false,
-      key: ValueKey(_floatyStyle?.icon.hashCode),
-      materialTapTargetSize: _floatyStyle?.materialTapTargetSize,
-      mouseCursor: _floatyStyle?.mouseCursor,
-      child: fabContent,
+    final fabSize = _floatyStyle?.size ?? 56.0;
+    return SizedBox(
+      width: fabSize,
+      height: fabSize,
+      child: FloatingActionButton(
+        shape: RoundedRectangleBorder(borderRadius: widget.borderRadius),
+        backgroundColor: _floatyStyle?.backgroundColor ?? context.primaryColor,
+        foregroundColor:
+            _floatyStyle?.foregroundColor ?? context.onPrimaryColor,
+        onPressed: _floatyStyle?.onTap,
+        heroTag: _floatyStyle?.heroTag,
+        autofocus: _floatyStyle?.autofocus ?? false,
+        clipBehavior: _floatyStyle?.clipBehavior ?? Clip.none,
+        enableFeedback: _floatyStyle?.enableFeedback ?? true,
+        focusColor: _floatyStyle?.focusColor ?? context.primaryColor,
+        hoverColor: _floatyStyle?.hoverColor ?? context.primaryColor,
+        splashColor: _floatyStyle?.splashColor ?? context.primaryColor,
+        tooltip: _floatyStyle?.tooltip,
+        mini: _floatyStyle?.mini ?? false,
+        focusNode: _floatyStyle?.focusNode,
+        isExtended: _floatyStyle?.isExtended ?? false,
+        key: ValueKey(_floatyStyle?.icon.hashCode),
+        materialTapTargetSize: _floatyStyle?.materialTapTargetSize,
+        mouseCursor: _floatyStyle?.mouseCursor,
+        child: fabContent,
+      ),
     );
   }
 
   /// Builds the navigation bar container with optional glass effect.
   ///
-  /// When a [FloatyMenu] is configured, the container expands upward to
+  /// When a [FloaticaMenu] is configured, the container expands upward to
   /// reveal the menu grid above the tabs row using a [SizeTransition].
   Widget _buildNavBarContainer(BuildContext context) {
     final tabWidgets = widget.tabs.map((tab) {
       // When menu is open, deselect all regular tabs
-      final effectiveTab = _isMenuOpen
-          ? FloatyTab(
-              isSelected: false,
-              title: tab.title,
-              onTap: tab.onTap,
-              icon: tab.icon,
-              titleStyle: tab.titleStyle,
-              floatyActionButton: tab.floatyActionButton,
-              margin: tab.margin,
-              selectedColor: tab.selectedColor,
-              unselectedColor: tab.unselectedColor,
-              selectedDisplayMode: tab.selectedDisplayMode,
-              unselectedDisplayMode: tab.unselectedDisplayMode,
-              selectedGradient: tab.selectedGradient,
-              unselectedGradient: tab.unselectedGradient,
-              badge: tab.badge,
-              iconSize: tab.iconSize,
-              selectedIconSize: tab.selectedIconSize,
-              labelPosition: tab.labelPosition,
-              indicatorStyle: tab.indicatorStyle,
-              indicatorColor: tab.indicatorColor,
-              borderColor: tab.borderColor,
-              borderWidth: tab.borderWidth,
-              animationDuration: tab.animationDuration,
-              animationCurve: tab.animationCurve,
-              enableHaptics: tab.enableHaptics,
-              tooltip: tab.tooltip,
-              glassEffect: tab.glassEffect,
-              width: tab.width,
-              height: tab.height,
-            )
-          : tab;
-      return FloatyTabWidget(
-        floatyTab: effectiveTab,
-        shape: widget.shape,
-        glassEffect: widget.glassEffect,
+      final effectiveTab = _isMenuOpen ? tab.copyWith(isSelected: false) : tab;
+      return Flexible(
+        child: FloaticaTabWidget(
+          floaticaTab: effectiveTab,
+          borderRadius: widget.borderRadius,
+          glassEffect: widget.glassEffect,
+        ),
       );
     }).toList();
 
     // Add menu tab if configured
     if (widget.menu != null) {
       final menu = widget.menu!;
-      final menuTab = FloatyTab(
+      final menuTab = FloaticaTab(
         isSelected: _isMenuOpen,
         title: menu.title,
         titleStyle: menu.titleStyle,
@@ -489,23 +464,30 @@ class _FloatyNavBarState extends State<FloatyNavBar>
         iconSize: menu.iconSize,
         selectedIconSize: menu.selectedIconSize,
         labelPosition: menu.labelPosition,
+        margin: menu.margin,
       );
       tabWidgets.add(
-        FloatyTabWidget(
-          floatyTab: menuTab,
-          shape: widget.shape,
-          glassEffect: widget.glassEffect,
+        Flexible(
+          child: FloaticaTabWidget(
+            floaticaTab: menuTab,
+            borderRadius: widget.borderRadius,
+            glassEffect: widget.glassEffect,
+          ),
         ),
       );
     }
 
     final tabsRow = SizedBox(
       height: widget.height,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: tabWidgets,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const NeverScrollableScrollPhysics(),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: tabWidgets,
+        ),
       ),
     );
 
@@ -544,8 +526,7 @@ class _FloatyNavBarState extends State<FloatyNavBar>
     // Apply glass effect if configured
     if (widget.glassEffect != null) {
       final glassEffect = widget.glassEffect!;
-      final borderRadius =
-          widget.menu?.borderRadius ?? widget.shape.borderRadius;
+      final borderRadius = widget.borderRadius;
 
       return LiquidGlassContainer(
         glassEffect: glassEffect,
@@ -555,7 +536,7 @@ class _FloatyNavBarState extends State<FloatyNavBar>
     }
 
     // Default container without glass effect
-    final borderRadius = widget.menu?.borderRadius ?? widget.shape.borderRadius;
+    final borderRadius = widget.borderRadius;
     return Container(
       decoration: BoxDecoration(
         color: widget.backgroundColor ?? context.surfaceColor,

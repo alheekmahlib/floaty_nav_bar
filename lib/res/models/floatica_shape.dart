@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 /// - [CircleShape]: A circular shape with rounded corners.
 /// - [RectangleShape]: A rectangular shape with customizable corner radius.
 /// - [SquircleShape]: A squircle shape with a continuous curve for the border.
-abstract class FloatyShape {
-  const FloatyShape();
+abstract class FloaticaShape {
+  const FloaticaShape();
 
   /// A [ShapeBorder] that represents the specific shape.
   ///
@@ -28,7 +28,7 @@ abstract class FloatyShape {
 ///
 /// This shape creates a circular button with a customizable border radius.
 /// The default radius is 100, making it suitable for pill-shaped designs.
-class CircleShape extends FloatyShape {
+class CircleShape extends FloaticaShape {
   /// The radius used to round the corners.
   ///
   /// Defaults to 100 for a pill shape.
@@ -50,7 +50,7 @@ class CircleShape extends FloatyShape {
 /// This shape allows customization of the corner radius using the [radius] parameter.
 /// If no [radius] is provided, the default value is 12, creating a button with slightly
 /// rounded corners.
-class RectangleShape extends FloatyShape {
+class RectangleShape extends FloaticaShape {
   /// The radius used to round the corners of the rectangle.
   ///
   /// Defaults to 12, but can be customized for more pronounced corner rounding.
@@ -71,7 +71,7 @@ class RectangleShape extends FloatyShape {
 ///
 /// This shape uses a continuous curve for the border, offering a modern look. The corner
 /// rounding can be customized using the [radius] property, with a default value of 24.
-class SquircleShape extends FloatyShape {
+class SquircleShape extends FloaticaShape {
   /// The radius used to round the squircle corners.
   ///
   /// Defaults to 24, but can be customized for a different appearance.

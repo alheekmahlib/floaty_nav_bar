@@ -1,28 +1,28 @@
-import 'package:floaty_nav_bar/res/models/floaty_menu_item.dart';
+import 'package:floatica/res/models/flloatica_menu_item.dart';
 import 'package:flutter/material.dart';
 
-/// A widget that renders a single [FloatyMenuItem] in the menu grid.
+/// A widget that renders a single [FloaticaMenuItem] in the menu grid.
 ///
 /// Displays a rounded-rectangle icon container with a title label below it.
 /// Includes a tap scale animation for tactile feedback.
-class FloatyMenuItemWidget extends StatefulWidget {
-  const FloatyMenuItemWidget({
+class FloaticaMenuItemWidget extends StatefulWidget {
+  const FloaticaMenuItemWidget({
     super.key,
     required this.item,
     this.onTapDismiss,
   });
 
   /// The menu item data.
-  final FloatyMenuItem item;
+  final FloaticaMenuItem item;
 
   /// Optional callback to dismiss the menu after the item's [onTap] fires.
   final VoidCallback? onTapDismiss;
 
   @override
-  State<FloatyMenuItemWidget> createState() => _FloatyMenuItemWidgetState();
+  State<FloaticaMenuItemWidget> createState() => _FloaticaMenuItemWidgetState();
 }
 
-class _FloatyMenuItemWidgetState extends State<FloatyMenuItemWidget>
+class _FloaticaMenuItemWidgetState extends State<FloaticaMenuItemWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _scaleController;
   late final Animation<double> _scaleAnimation;

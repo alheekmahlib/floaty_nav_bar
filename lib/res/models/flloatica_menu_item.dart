@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 ///
 /// Each menu item displays an icon inside a rounded container with an
 /// optional title below it.
-class FloatyMenuItem {
-  /// Creates a [FloatyMenuItem].
-  const FloatyMenuItem({
+class FloaticaMenuItem {
+  /// Creates a [FloaticaMenuItem].
+  const FloaticaMenuItem({
     required this.icon,
     required this.title,
     required this.onTap,

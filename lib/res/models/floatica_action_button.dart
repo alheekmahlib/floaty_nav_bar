@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 /// A model class for customizing a floating action button within a navigation bar.
 ///
-/// The [FloatyActionButton] allows you to specify a widget, action (onTap),
+/// The [FloaticaActionButton] allows you to specify a widget, action (onTap),
 /// size, background color, and foreground color for a floating action button.
-class FloatyActionButton {
+class FloaticaActionButton {
   /// The widget displayed inside the floating action button.
   ///
   /// This can be any widget, such as an [Icon], [Text], or custom widget.
@@ -157,11 +157,11 @@ class FloatyActionButton {
   /// is used.
   final TextStyle? extendedTextStyle;
 
-  /// Creates a [FloatyActionButton] with the given widget, onTap, and optional
+  /// Creates a [FloaticaActionButton] with the given widget, onTap, and optional
   /// customization options for size, background color, and foreground color.
   ///
   /// The [icon] can be any widget (such as [Icon] or [Text]) to provide flexibility.
-  FloatyActionButton({
+  FloaticaActionButton({
     required this.icon,
     required this.onTap,
     this.size = 50,
@@ -186,12 +186,12 @@ class FloatyActionButton {
     this.extendedTextStyle,
   });
 
-  /// Returns a copy of this [FloatyActionButton] with the option to modify any
+  /// Returns a copy of this [FloaticaActionButton] with the option to modify any
   /// of the properties.
   ///
   /// If any parameter is not specified, the current value from the original
   /// object is retained.
-  FloatyActionButton copyWith({
+  FloaticaActionButton copyWith({
     Widget? icon,
     VoidCallback? onTap,
     double? size,
@@ -215,7 +215,7 @@ class FloatyActionButton {
     EdgeInsetsGeometry? extendedPadding,
     TextStyle? extendedTextStyle,
   }) {
-    return FloatyActionButton(
+    return FloaticaActionButton(
       icon: icon ?? this.icon,
       onTap: onTap ?? this.onTap,
       size: size ?? this.size,

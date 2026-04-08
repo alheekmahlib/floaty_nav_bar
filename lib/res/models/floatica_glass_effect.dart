@@ -17,13 +17,13 @@ enum LiquidGlassVariant {
 ///
 /// Provides both classic glassmorphism and iOS 26–style Liquid Glass effects.
 /// Use the named constructors for quick presets:
-/// - [FloatyGlassEffect.light] — classic light glass.
-/// - [FloatyGlassEffect.dark] — classic dark glass.
-/// - [FloatyGlassEffect.liquidGlass] — iOS 26 regular Liquid Glass.
-/// - [FloatyGlassEffect.liquidGlassClear] — iOS 26 clear Liquid Glass.
-class FloatyGlassEffect {
+/// - [FloaticaGlassEffect.light] — classic light glass.
+/// - [FloaticaGlassEffect.dark] — classic dark glass.
+/// - [FloaticaGlassEffect.liquidGlass] — iOS 26 regular Liquid Glass.
+/// - [FloaticaGlassEffect.liquidGlassClear] — iOS 26 clear Liquid Glass.
+class FloaticaGlassEffect {
   /// Creates a glassmorphism effect configuration.
-  const FloatyGlassEffect({
+  const FloaticaGlassEffect({
     this.blur = 10.0,
     this.opacity = 0.2,
     this.tintColor,
@@ -42,7 +42,7 @@ class FloatyGlassEffect {
   });
 
   /// Creates a dark glass effect preset with gradient.
-  const FloatyGlassEffect.dark({
+  const FloaticaGlassEffect.dark({
     this.blur = 20.0,
     this.opacity = 0.3,
     this.tintColor,
@@ -69,7 +69,7 @@ class FloatyGlassEffect {
   });
 
   /// Creates a light glass effect preset with gradient.
-  const FloatyGlassEffect.light({
+  const FloaticaGlassEffect.light({
     this.blur = 15.0,
     this.opacity = 0.15,
     this.tintColor,
@@ -103,7 +103,7 @@ class FloatyGlassEffect {
   ///
   /// The regular variant blurs and adjusts the luminosity of background content
   /// to maintain legibility of text and foreground elements.
-  const FloatyGlassEffect.liquidGlass({
+  const FloaticaGlassEffect.liquidGlass({
     this.blur = 25.0,
     this.opacity = 0.12,
     this.tintColor,
@@ -136,7 +136,7 @@ class FloatyGlassEffect {
   /// Highly translucent, ideal for prioritizing the visibility of underlying
   /// content. Use this for elements that float above media backgrounds
   /// (photos, videos) to create a more immersive experience.
-  const FloatyGlassEffect.liquidGlassClear({
+  const FloaticaGlassEffect.liquidGlassClear({
     this.blur = 18.0,
     this.opacity = 0.06,
     this.tintColor,

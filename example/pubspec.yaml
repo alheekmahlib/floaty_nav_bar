@@ -37,7 +37,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   hugeicons: ^0.0.7
 
-  floaty_nav_bar:
+  floatica:
     path: ../
 
 dev_dependencies:
