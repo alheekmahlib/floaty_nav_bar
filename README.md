@@ -81,7 +81,7 @@ Or
 
 ```yaml
 dependencies:
-  floatica: ^1.0.0+1
+  floatica: ^1.0.0+2
 ```
 
 Then run:
