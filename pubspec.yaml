@@ -1,6 +1,6 @@
 name: floatica
-description: "A highly customizable floating navigation bar for Flutter with glassmorphism effects, expandable menus, per-tab floating action buttons, and iOS 26 Liquid Glass support. Zero external dependencies."
-version: 1.0.0
+description: "A customizable floating navigation bar for Flutter with glassmorphism, expandable menus, per-tab FABs, and Liquid Glass support."
+version: 1.0.0+1
 homepage: https://github.com/alheekmahlib/floatica
 
 environment:
